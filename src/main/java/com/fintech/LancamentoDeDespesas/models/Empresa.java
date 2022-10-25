@@ -1,7 +1,7 @@
 package com.fintech.LancamentoDeDespesas.models;
 
 import java.io.Serializable;
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -11,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -19,7 +20,6 @@ import javax.persistence.Version;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.boot.autoconfigure.flyway.FlywayDataSource;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
@@ -30,9 +30,9 @@ import lombok.NoArgsConstructor;
 @FlywayDataSource
 @Entity
 @Table(name = "EMPRESA")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties
 public class Empresa implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -49,12 +49,7 @@ public class Empresa implements Serializable {
 	@Column
 	private String nome;
 	
-	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, cascade = (CascadeType.ALL))
-	private Set<Lancamento> lancamento;
-
-
-	public UUID getId() {
+		public UUID getId() {
 		return id;
 	}
 
@@ -76,14 +71,6 @@ public class Empresa implements Serializable {
 
 	public void setNome(String nome) {
 		this.nome = nome;
-	}
-
-	public Set<Lancamento> getLancamento() {
-		return lancamento;
-	}
-
-	public void setLancamento(Set<Lancamento> lancamento) {
-		this.lancamento = lancamento;
 	}
 
 	@Override
@@ -113,11 +100,9 @@ public class Empresa implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Empresa [id=" + id + ", jversion=" + jversion + ", nome=" + nome + ", lancamento=" + lancamento + "]";
+		return "Empresa [id=" + id + ", jversion=" + jversion + ", nome=" + nome + "]";
 	}
-	
-	
-	
+
 	
 
 }

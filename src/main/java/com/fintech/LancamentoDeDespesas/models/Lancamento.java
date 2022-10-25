@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -21,8 +20,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.springframework.boot.autoconfigure.flyway.FlywayDataSource;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,9 +30,9 @@ import lombok.NoArgsConstructor;
 @FlywayDataSource
 @Entity
 @Table(name = "LANCAMENTO_DE_DESPESAS")
-@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 @AllArgsConstructor
 @NoArgsConstructor
+//@JsonIgnoreProperties
 public class Lancamento implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -51,8 +49,8 @@ public class Lancamento implements Serializable {
 	@Column(nullable = false, length = 20)
 	private String tipo;
 
-	@JsonManagedReference
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_empresa", referencedColumnName = "id")
 	private Empresa idEmpresa;
 
@@ -72,6 +70,7 @@ public class Lancamento implements Serializable {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	@Column(name = "data_vencimento")
 	private LocalDate data_vencimento;
+	
 
 	public UUID getId() {
 		return id;

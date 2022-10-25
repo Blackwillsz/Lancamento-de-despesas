@@ -6,7 +6,11 @@ import java.util.UUID;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fintech.LancamentoDeDespesas.models.Empresa;
+import com.fintech.LancamentoDeDespesas.models.Lancamento;
 
 /**
  * @author willian.souza
@@ -35,6 +39,20 @@ public class LancamentoForm {
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private LocalDate data_vencimento;
+
+	public LancamentoForm() {
+	}
+
+	public LancamentoForm(Lancamento lancamento) {
+		this.tipo = lancamento.getTipo();
+		this.idEmpresa = lancamento.getIdEmpresa().getId();
+		this.descricao = lancamento.getDescricao();
+		this.valor = lancamento.getValor();
+		this.pago = lancamento.getPago();
+		this.data_pagamento = lancamento.getData_pagamento();
+		this.data_vencimento = lancamento.getData_vencimento();
+	}
+
 
 	public String getTipo() {
 		return tipo;

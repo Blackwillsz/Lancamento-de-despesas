@@ -41,7 +41,7 @@ public class LancamentoController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Object> buscarLancamentoPorId(@PathVariable UUID id){
+	public ResponseEntity<LancamentoDto> buscarLancamentoPorId(@PathVariable UUID id){
 		return ResponseEntity.status(HttpStatus.OK).body(lancamentoService.buscarPorId(id));	
 	}
 	

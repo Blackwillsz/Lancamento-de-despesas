@@ -7,6 +7,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fintech.LancamentoDeDespesas.models.Lancamento;
 
 
 /**
@@ -21,8 +22,8 @@ public class AtualizarForm {
 	@NotBlank
 	private String tipo;
 
-	@NotNull
-	private UUID idEmpresa;
+//	@NotNull
+//	private UUID idEmpresa;
 
 	@NotBlank
 	private String descricao;
@@ -36,6 +37,19 @@ public class AtualizarForm {
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private LocalDate data_vencimento;
+	
+	public AtualizarForm() {
+	}
+
+	public AtualizarForm(Lancamento lancamento) {
+		this.tipo = lancamento.getTipo();
+//		this.idEmpresa = lancamento.getIdEmpresa().getId();
+		this.descricao = lancamento.getDescricao();
+		this.valor = lancamento.getValor();
+		this.pago = lancamento.getPago();
+		this.data_pagamento = lancamento.getData_pagamento();
+		this.data_vencimento = lancamento.getData_vencimento();
+	}
 
 	public String getTipo() {
 		return tipo;
@@ -45,13 +59,13 @@ public class AtualizarForm {
 		this.tipo = tipo;
 	}
 
-	public UUID getIdEmpresa() {
-		return idEmpresa;
-	}
-
-	public void setIdEmpresa(UUID idEmpresa) {
-		this.idEmpresa = idEmpresa;
-	}
+//	public UUID getIdEmpresa() {
+//		return idEmpresa;
+//	}
+//
+//	public void setIdEmpresa(UUID idEmpresa) {
+//		this.idEmpresa = idEmpresa;
+//	}
 
 	public String getDescricao() {
 		return descricao;

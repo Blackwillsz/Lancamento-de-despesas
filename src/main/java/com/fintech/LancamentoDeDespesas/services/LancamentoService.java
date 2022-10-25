@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.fintech.LancamentoDeDespesas.dto.LancamentoDto;
 import com.fintech.LancamentoDeDespesas.forms.AtualizarForm;
 import com.fintech.LancamentoDeDespesas.forms.LancamentoForm;
 import com.fintech.LancamentoDeDespesas.models.Empresa;
@@ -36,19 +37,23 @@ public class LancamentoService {
 	
 	
 	@Transactional
-	public ResponseEntity<Object> converter(LancamentoForm lancamentoForm) {
+	public LancamentoForm converter(LancamentoForm lancamentoForm) {
 		Optional<Empresa> idEmpresa = buscarEmpresaPorId(lancamentoForm.getIdEmpresa());
 		if (!idEmpresa.isPresent()) {
-			ResponseEntity.status(HttpStatus.NOT_FOUND).body("Código da empresa não foi encontrado!");
+			return null;
 		}
 		var lancamento = new Lancamento();
 		BeanUtils.copyProperties(lancamentoForm, lancamento);
 		lancamento.setIdEmpresa(idEmpresa.get());
-		return ResponseEntity.status(HttpStatus.CREATED).body(lancamentoRepository.save(lancamento));
+		return new LancamentoForm(lancamentoRepository.save(lancamento));
 	}
 	
-	public List<Lancamento> buscarTodos() {
-		return lancamentoRepository.findAll();
+//	public List<Lancamento> buscarTodos() {
+//		return lancamentoRepository.findAll();
+//	}
+	
+	public List<Lancamento> buscarTodos(){
+		return lancamentoRepository.findTodosLancamentos();
 	}
 	
 	public Optional<Lancamento> buscarPorId(UUID id) {
@@ -64,14 +69,14 @@ public class LancamentoService {
 	}
 
 	@Transactional
-	public ResponseEntity<Object> atualizarLancamento(UUID id, AtualizarForm form) {
+	public AtualizarForm atualizarLancamento(UUID id, AtualizarForm form) {
 		Optional<Lancamento> updateForm = buscarPorId(id);
 		if (!updateForm.isPresent()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Lançamento não encontrado!");
+			return null;
 		}
 		var lancamento = updateForm.get();
 		BeanUtils.copyProperties(form, lancamento);
-		return ResponseEntity.status(HttpStatus.OK).body(salvar(lancamento));
+		return new AtualizarForm(lancamentoRepository.save(lancamento));
 	}
 
 	public ResponseEntity<Object> deletarLancamento(UUID id) {
@@ -80,7 +85,7 @@ public class LancamentoService {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Lançamento não encontrado!");
 		}
 		lancamentoRepository.deleteById(id);
-		return ResponseEntity.status(HttpStatus.OK).body("Lançamento deletado com sucesso!");
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Lançamento deletado com sucesso!");
 	}
 	
 }
