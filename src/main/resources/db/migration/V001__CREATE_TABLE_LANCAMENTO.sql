@@ -1,0 +1,10 @@
+ CREATE TABLE LANCAMENTO_DE_DESPESAS (
+  id UUID NOT NULL PRIMARY KEY,
+  tipo VARCHAR(20) NOT NULL,
+  id_empresa UUID NOT NULL,
+  descricao VARCHAR(100) NOT NULL,
+  valor DECIMAL(10,2) NOT NULL,
+  pago BOOLEAN NOT NULL,
+  data_pagamento DATE NULL DEFAULT NULL,
+  data_vencimento DATE NOT NULL
+  );
