@@ -1,13 +1,11 @@
 package com.fintech.LancamentoDeDespesas.controllers;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,9 +34,14 @@ public class LancamentoController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(lancamentoService.converter(lancamentoForm));
 	}
 	
+//	@GetMapping
+//	public Page<LancamentoDto> listaDeLancamentos(@PageableDefault( page = 0, size = 10) Pageable paginacao){
+//		return lancamentoService.buscarTodos(paginacao);
+//	}
+	
 	@GetMapping
-	public Page<LancamentoDto> listaDeLancamentos(@PageableDefault( page = 0, size = 10) Pageable paginacao){
-		return lancamentoService.buscarTodos(paginacao);
+	public List<LancamentoDto> listaDeLancamentos(){
+		return lancamentoService.buscarTodos();
 	}
 	
 	@GetMapping("/{id}")

@@ -1,9 +1,8 @@
 package com.fintech.LancamentoDeDespesas.dto;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.stream.Collectors;
-
-import org.springframework.data.domain.Page;
 
 import com.fintech.LancamentoDeDespesas.models.Lancamento;
 
@@ -67,8 +66,12 @@ public class LancamentoDto {
 	}
 	
 	
-	public static Page<LancamentoDto> converter(Page<Lancamento> lancamento) {
-        return lancamento.map(LancamentoDto::new);
+//	public static Page<LancamentoDto> converter(Page<Lancamento> lancamento) {
+//        return lancamento.map(LancamentoDto::new);
+//    }
+	
+	public static List<LancamentoDto> converter(List<Lancamento> lancamento) {
+        return lancamento.stream().map(LancamentoDto::new).collect(Collectors.toList());
     }
 	
 	
