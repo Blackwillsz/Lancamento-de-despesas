@@ -1,11 +1,13 @@
 package com.fintech.LancamentoDeDespesas.controllers;
 
-import java.util.List;
 import java.util.UUID;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fintech.LancamentoDeDespesas.dto.LancamentoDto;
 import com.fintech.LancamentoDeDespesas.forms.AtualizarForm;
 import com.fintech.LancamentoDeDespesas.forms.LancamentoForm;
-import com.fintech.LancamentoDeDespesas.models.Lancamento;
 import com.fintech.LancamentoDeDespesas.services.LancamentoService;
 
 @RestController
@@ -36,14 +37,16 @@ public class LancamentoController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<LancamentoDto>> buscarTodosLancamentos(){
-		return lancamentoService.buscarTodos();
+	public Page<LancamentoDto> listaDeLancamentos(@PageableDefault( page = 0, size = 10) Pageable paginacao){
+		return lancamentoService.buscarTodos(paginacao);
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Object> buscarLancamentoPorId(@PathVariable UUID id){
-		return ResponseEntity.status(HttpStatus.OK).body(lancamentoService.buscarPorId(id));	
+	public ResponseEntity<ResponseEntity<LancamentoDto>> buscarLancamentoPorId(@PathVariable UUID id){
+		return ResponseEntity.status(HttpStatus.OK).body(lancamentoService.lancamentoPorId(id));	
 	}
+	
+
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Object> atualizarLancamento(@PathVariable UUID id, @RequestBody @Valid AtualizarForm form){

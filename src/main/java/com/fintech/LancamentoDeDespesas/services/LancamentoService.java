@@ -1,6 +1,5 @@
 package com.fintech.LancamentoDeDespesas.services;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -8,6 +7,10 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -23,19 +26,17 @@ import com.fintech.LancamentoDeDespesas.repository.LancamentoRepository;
 /**
  * @author willian.souza
  * 
- * A classe lancamentoService contem toda a regra de negocio da API
+ *         A classe lancamentoService contem toda a regra de negocio da API
  */
 @Service
 public class LancamentoService {
 
 	@Autowired
 	private LancamentoRepository lancamentoRepository;
-	
+
 	@Autowired
 	private EmpresaRepository empresaRepository;
-	
-	
-	
+
 	@Transactional
 	public LancamentoForm converter(LancamentoForm lancamentoForm) {
 		Optional<Empresa> idEmpresa = buscarEmpresaPorId(lancamentoForm.getIdEmpresa());
@@ -47,20 +48,25 @@ public class LancamentoService {
 		lancamento.setIdEmpresa(idEmpresa.get());
 		return new LancamentoForm(lancamentoRepository.save(lancamento));
 	}
-	
-//	public List<Lancamento> buscarTodos() {
-//		return lancamentoRepository.findAll();
-//	}
-	
-	public ResponseEntity<List<LancamentoDto>> buscarTodos(){
-		LancamentoDto lancamento = new LancamentoDto();
-		return new ResponseEntity<>(lancamentoRepository.findTodosLancamentos(), HttpStatus.OK);
+
+	public Page<LancamentoDto> buscarTodos(
+			@PageableDefault(sort = "id", direction = Direction.ASC, page = 0, size = 10) Pageable paginacao) {
+		Page<Lancamento> lancamento = lancamentoRepository.findTodosLancamentos(paginacao);
+		return LancamentoDto.converter(lancamento);
 	}
-	
+
+	public ResponseEntity<LancamentoDto> lancamentoPorId(UUID id) {
+		Optional<Lancamento> lancamento = buscarPorId(id);
+		if (!lancamento.isPresent()) {
+			ResponseEntity.status(HttpStatus.NOT_FOUND).body("Lancamento não encontrado!");
+		}
+		return ResponseEntity.ok(new LancamentoDto(lancamento.get()));
+	}
+
 	public Optional<Lancamento> buscarPorId(UUID id) {
 		return lancamentoRepository.findById(id);
 	}
-	
+
 	public Optional<Empresa> buscarEmpresaPorId(UUID idEmpresa) {
 		return empresaRepository.findById(idEmpresa);
 	}
@@ -80,13 +86,14 @@ public class LancamentoService {
 		return new AtualizarForm(lancamentoRepository.save(lancamento));
 	}
 
+	@Transactional
 	public ResponseEntity<Object> deletarLancamento(UUID id) {
 		Optional<Lancamento> deleteId = buscarPorId(id);
 		if (!deleteId.isPresent()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Lançamento não encontrado!");
+			return ResponseEntity.notFound().build();
 		}
 		lancamentoRepository.deleteById(id);
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Lançamento deletado com sucesso!");
+		return ResponseEntity.noContent().build();
 	}
-	
+
 }

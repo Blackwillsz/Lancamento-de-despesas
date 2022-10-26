@@ -1,11 +1,15 @@
 package com.fintech.LancamentoDeDespesas.dto;
 
 import java.time.LocalDate;
+import java.util.stream.Collectors;
 
-import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
 
 import com.fintech.LancamentoDeDespesas.models.Lancamento;
 
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
 public class LancamentoDto {
 	
 	private String tipo;
@@ -15,10 +19,14 @@ public class LancamentoDto {
 	private LocalDate data_pagamento;
 	private LocalDate data_vencimento;
 	
-	public LancamentoDto(LancamentoDto lancamentoDto) {
-	}
 	
-	public LancamentoDto() {
+	public LancamentoDto(Lancamento lancamento) {
+		this.tipo = lancamento.getTipo();
+		this.descricao = lancamento.getDescricao();
+		this.valor = lancamento.getValor();
+		this.pago = lancamento.getPago();
+		this.data_pagamento = lancamento.getData_pagamento();
+		this.data_vencimento = lancamento.getData_vencimento();
 	}
 
 	public String getTipo() {
@@ -58,10 +66,10 @@ public class LancamentoDto {
 		this.data_vencimento = data_vencimento;
 	}
 	
-	public LancamentoDto convertToObject(Lancamento lancamento) {
-		BeanUtils.copyProperties(lancamento, this, "tipo", "descricao", "valor", "pago", "data_pagamento", "data_vencimento");
-		return this;
-	}
+	
+	public static Page<LancamentoDto> converter(Page<Lancamento> lancamento) {
+        return lancamento.map(LancamentoDto::new);
+    }
 	
 	
 }
