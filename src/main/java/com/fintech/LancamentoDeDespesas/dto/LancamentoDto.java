@@ -2,6 +2,8 @@ package com.fintech.LancamentoDeDespesas.dto;
 
 import java.time.LocalDate;
 
+import org.springframework.beans.BeanUtils;
+
 import com.fintech.LancamentoDeDespesas.models.Lancamento;
 
 public class LancamentoDto {
@@ -16,6 +18,9 @@ public class LancamentoDto {
 	public LancamentoDto(LancamentoDto lancamentoDto) {
 	}
 	
+	public LancamentoDto() {
+	}
+
 	public String getTipo() {
 		return tipo;
 	}
@@ -51,6 +56,11 @@ public class LancamentoDto {
 	}
 	public void setData_vencimento(LocalDate data_vencimento) {
 		this.data_vencimento = data_vencimento;
+	}
+	
+	public LancamentoDto convertToObject(Lancamento lancamento) {
+		BeanUtils.copyProperties(lancamento, this, "tipo", "descricao", "valor", "pago", "data_pagamento", "data_vencimento");
+		return this;
 	}
 	
 	

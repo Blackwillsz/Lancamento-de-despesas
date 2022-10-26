@@ -52,8 +52,9 @@ public class LancamentoService {
 //		return lancamentoRepository.findAll();
 //	}
 	
-	public List<Lancamento> buscarTodos(){
-		return lancamentoRepository.findTodosLancamentos();
+	public ResponseEntity<List<LancamentoDto>> buscarTodos(){
+		LancamentoDto lancamento = new LancamentoDto();
+		return new ResponseEntity<>(lancamentoRepository.findTodosLancamentos(), HttpStatus.OK);
 	}
 	
 	public Optional<Lancamento> buscarPorId(UUID id) {

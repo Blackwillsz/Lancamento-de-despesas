@@ -36,12 +36,12 @@ public class LancamentoController {
 	}
 	
 	@GetMapping
-	public List<Lancamento> buscarTodosLancamentos(){
+	public ResponseEntity<List<LancamentoDto>> buscarTodosLancamentos(){
 		return lancamentoService.buscarTodos();
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<LancamentoDto> buscarLancamentoPorId(@PathVariable UUID id){
+	public ResponseEntity<Object> buscarLancamentoPorId(@PathVariable UUID id){
 		return ResponseEntity.status(HttpStatus.OK).body(lancamentoService.buscarPorId(id));	
 	}
 	

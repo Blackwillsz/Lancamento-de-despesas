@@ -15,6 +15,6 @@ public interface LancamentoRepository extends JpaRepository<Lancamento, UUID> {
 	
 	@Query(" SELECT lancamento FROM Lancamento lancamento "
 			+ "LEFT JOIN FETCH lancamento.idEmpresa ORDER BY lancamento.pago ")
-	public List<Lancamento> findTodosLancamentos();
+	public List<LancamentoDto> findTodosLancamentos();
 
 }
